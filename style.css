@@ -3,3 +3,10 @@
     padding: 0;
 }
 
+.canvas{
+    background-color: rgba(161, 144, 144, 0.722);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+} 

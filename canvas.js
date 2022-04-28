@@ -35,7 +35,7 @@ class Cube {
   }
 }
 
-class Obstacles {
+class Obstacle {
   constructor({ width, height, x }) {
     this.width = width;
     this.height = height;
@@ -62,19 +62,32 @@ class Obstacles {
     this.obstaclesDraw();
 
     this.position.x -= this.acceleration.x;
-    this.acceleration.x = 6;
+    this.acceleration.x = 12;
     this.acceleration.x += this.speed.x;
   }
 }
 
 const cube = new Cube();
-const obsticals = [
-  new Obstacles({ width: 200, height: 90, x: 1000 }),
-  new Obstacles({ width: 200, height: 90, x: 2000 }),
-];
+const obsticals = [];
 
-function animation() {
-  requestAnimationFrame(animation);
+function spawObstacle() {
+  let randomHeight = Math.random() * (150 - cube.height) + cube.height;
+  let randomWidth = Math.random() * (200 - cube.width) + cube.width;
+  let obstacle = new Obstacle({
+    x: canvas.width,
+    height: randomHeight,
+    width: randomWidth,
+  });
+  obsticals.push(obstacle);
+  let randomMillisecondTime = Math.random() * (3000 - 1500) + 1500;
+  console.log("hej", randomMillisecondTime);
+  setTimeout(spawObstacle, randomMillisecondTime);
+}
+
+spawObstacle();
+
+function render() {
+  requestAnimationFrame(render);
   context.fillStyle = "rgb(206, 206, 206)";
   context.fillRect(0, 0, canvas.width, canvas.height);
   cube.cubeJump();
@@ -91,18 +104,18 @@ function animation() {
       cube.position.x <= obstical.position.x + obstical.width
     ) {
       cube.velocity.y = 0; // ändra till att man dör vid nud istället för att åka på objekt
-      console.log("Nuddade topen av blocket");
+      console.log("Nuddar toppen");
     } else if (
       cube.position.x + cube.width >= obstical.position.x &&
       cube.position.y + cube.velocity.y >= obstical.position.y
     ) {
-      console.log("nudd frånt");
+      console.log("nuddar front");
       obstical.acceleration.x = 0; //ändra till att man dör vid nud istället för att åka på objekt
     }
   });
 }
 
-animation();
+render();
 
 window.addEventListener("keydown", function (event) {
   if (event.key === " ") {
