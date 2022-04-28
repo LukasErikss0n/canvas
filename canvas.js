@@ -36,12 +36,12 @@ class Cube {
 }
 
 class Obstacles {
-  constructor() {
-    this.width = 200;
-    this.height = 50;
+  constructor({ width, height, x }) {
+    this.width = width;
+    this.height = height;
 
     this.position = {
-      x: 200,
+      x: x,
       y: canvas.height - this.height,
     };
     this.acceleration = {
@@ -68,32 +68,38 @@ class Obstacles {
 }
 
 const cube = new Cube();
-const obstical = new Obstacles(); // obsticals = [ new obsticales()]
+const obsticals = [
+  new Obstacles({ width: 200, height: 90, x: 1000 }),
+  new Obstacles({ width: 200, height: 90, x: 2000 }),
+];
 
 function animation() {
   requestAnimationFrame(animation);
   context.fillStyle = "rgb(206, 206, 206)";
   context.fillRect(0, 0, canvas.width, canvas.height);
   cube.cubeJump();
-  obstical.moveObstical();
+  obsticals.forEach(function (obstical) {
+    obstical.moveObstical();
+  });
 
   //crash detection
-
-  if (
-    cube.position.y + cube.height <= obstical.position.y &&
-    cube.position.y + cube.height + cube.velocity.y >= obstical.position.y &&
-    cube.position.x + cube.width >= obstical.position.x &&
-    cube.position.x <= obstical.position.x + obstical.width
-  ) {
-    cube.velocity.y = 0; // ändra till att man dör vid nud istället för att åka på objekt
-    console.log("Nuddade topen av blocket");
-  } else if (
-    cube.position.x + cube.width >= obstical.position.x &&
-    cube.position.y + cube.velocity.y >= obstical.position.y
-  ) {
-    console.log("nudd frånt");
-    obstical.acceleration.x = 0; //ändra till att man dör vid nud istället för att åka på objekt
-  }
+  obsticals.forEach(function (obstical) {
+    if (
+      cube.position.y + cube.height <= obstical.position.y &&
+      cube.position.y + cube.height + cube.velocity.y >= obstical.position.y &&
+      cube.position.x + cube.width >= obstical.position.x &&
+      cube.position.x <= obstical.position.x + obstical.width
+    ) {
+      cube.velocity.y = 0; // ändra till att man dör vid nud istället för att åka på objekt
+      console.log("Nuddade topen av blocket");
+    } else if (
+      cube.position.x + cube.width >= obstical.position.x &&
+      cube.position.y + cube.velocity.y >= obstical.position.y
+    ) {
+      console.log("nudd frånt");
+      obstical.acceleration.x = 0; //ändra till att man dör vid nud istället för att åka på objekt
+    }
+  });
 }
 
 animation();
