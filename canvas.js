@@ -1,63 +1,107 @@
-let startButton = document.getElementById("start-button");
+const canvas = document.querySelector("canvas");
+const context = canvas.getContext("2d");
 
-let cubeSize = 20
-let xPosCube = 30
-let yPosCube = canvas.height - cubeSize
-let cube
+canvas.width = 1000;
+canvas.height = 400;
 
-var gameArea = {
-  canvas: document.createElement("canvas"),
-  start: function(){
-    this.canvas.width = 1000
-    this.canvas.height = 400
-    this.context = this.canvas.getContext("2d");
-    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-    this.frameNo = 0
-    updateGameArea()
-  },
-  clear: function(){
-    this.context,clearRect(0,0, this.canvas.width, this.canvas.height)
+const gravity = 0.2;
+class Cube {
+  constructor() {
+    this.height = 50;
+    this.width = 50;
+
+    this.position = {
+      x: 30,
+      y: canvas.height - this.height,
+    };
+    this.velocity = {
+      x: 0,
+      y: 1,
+    };
+  }
+  cubeDraw() {
+    context.fillStyle = "green";
+    context.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+
+  cubeJump() {
+    this.cubeDraw();
+    this.position.y += this.velocity.y;
+    if (this.position.y + this.height + this.velocity.y <= canvas.height) {
+      this.velocity.y += gravity;
+    } else {
+      this.velocity.y = 0;
+    }
   }
 }
 
-function startGame() {
-  cube.fillStyle = "green";
-  cube.fillRect(xPosCube, yPosCube, cubeSize, cubeSize);
-  cube.gravity = 0.05
-  cube.speedX = 0
-  cube.speedY = 0
-  cube.x = 0
-  cube.y = 0
-}
+class Obstacles {
+  constructor() {
+    this.width = 200;
+    this.height = 50;
 
-document.onkeydown = function (event) {
-  const key = event.key;
-  if (key === " ") {
-    console.log("space");
-    jump();
+    this.position = {
+      x: 200,
+      y: canvas.height - this.height,
+    };
+    this.acceleration = {
+      x: 0.5,
+      y: 0,
+    };
+    this.speed = {
+      x: 0.005,
+      y: 0,
+    };
   }
-};
 
-function jump() {
-  cube.fillRect(xPosCube, yPosCube - 20, cubeSize, cubeSize);
-  newPos();
-}
+  obstaclesDraw() {
+    context.fillStyle = "darkblue";
+    context.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+  moveObstical() {
+    this.obstaclesDraw();
 
-newPos = function () {
-  gravitySpeed += gravity;
-  cube.x += speedX;
-  cube.y += speedY + gravitySpeed;
-  hitBottom();
-};
-
-function updateGameArea(){
-  gameArea.clear()
-  gameArea.frameNo += 1
-  if(gameArea.frameNo == 1){ // lägg till  || everyinterval() för att skapa nya hinder
-    x =
+    this.position.x -= this.acceleration.x;
+    this.acceleration.x = 6;
+    this.acceleration.x += this.speed.x;
   }
 }
 
-setInterval(() => {}, interval);
+const cube = new Cube();
+const obstical = new Obstacles(); // obsticals = [ new obsticales()]
 
-startGame();
+function animation() {
+  requestAnimationFrame(animation);
+  context.fillStyle = "rgb(206, 206, 206)";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  cube.cubeJump();
+  obstical.moveObstical();
+
+  //crash detection
+
+  if (
+    cube.position.y + cube.height <= obstical.position.y &&
+    cube.position.y + cube.height + cube.velocity.y >= obstical.position.y &&
+    cube.position.x + cube.width >= obstical.position.x &&
+    cube.position.x <= obstical.position.x + obstical.width
+  ) {
+    cube.velocity.y = 0; // ändra till att man dör vid nud istället för att åka på objekt
+    console.log("Nuddade topen av blocket");
+  } else if (
+    cube.position.x + cube.width >= obstical.position.x &&
+    cube.position.y + cube.velocity.y >= obstical.position.y
+  ) {
+    console.log("nudd frånt");
+    obstical.acceleration.x = 0; //ändra till att man dör vid nud istället för att åka på objekt
+  }
+}
+
+animation();
+
+window.addEventListener("keydown", function (event) {
+  if (event.key === " ") {
+    if (cube.velocity.y == 0) {
+      cube.velocity.y -= 8;
+    }
+  }
+});
