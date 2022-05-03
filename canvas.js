@@ -20,7 +20,7 @@ class Cube {
     };
   }
   cubeDraw() {
-    context.fillStyle = "green";
+    context.fillStyle = "orange";
     context.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
@@ -45,7 +45,7 @@ class Obstacle {
       y: canvas.height - this.height,
     };
     this.acceleration = {
-      x: 0.5,
+      x: 20,
       y: 0,
     };
     this.speed = {
@@ -61,16 +61,15 @@ class Obstacle {
   moveObstical() {
     this.obstaclesDraw();
 
-    this.position.x -= this.acceleration.x;
-    this.acceleration.x = 12;
     this.acceleration.x += this.speed.x;
+    this.position.x -= this.acceleration.x;
   }
 }
 
 const cube = new Cube();
 const obsticals = [];
 
-function spawObstacle() {
+function spawnObstacle() {
   let randomHeight = Math.random() * (150 - cube.height) + cube.height;
   let randomWidth = Math.random() * (200 - cube.width) + cube.width;
   let obstacle = new Obstacle({
@@ -79,14 +78,18 @@ function spawObstacle() {
     width: randomWidth,
   });
   obsticals.push(obstacle);
-  let randomMillisecondTime = Math.random() * (3000 - 1500) + 1500;
-  console.log("hej", randomMillisecondTime);
-  setTimeout(spawObstacle, randomMillisecondTime);
+  let randomMillisecondTime = Math.random() * (2500 - 1500) + 1500;
+  setTimeout(spawnObstacle, randomMillisecondTime);
 }
 
-spawObstacle();
+spawnObstacle();
+
+let gamePlay = true;
 
 function render() {
+  if (!gamePlay) {
+    return gamePlay;
+  }
   requestAnimationFrame(render);
   context.fillStyle = "rgb(206, 206, 206)";
   context.fillRect(0, 0, canvas.width, canvas.height);
@@ -107,10 +110,13 @@ function render() {
       console.log("Nuddar toppen");
     } else if (
       cube.position.x + cube.width >= obstical.position.x &&
+      obstical.width + obstical.position.x > cube.position.x &&
       cube.position.y + cube.velocity.y >= obstical.position.y
     ) {
       console.log("nuddar front");
       obstical.acceleration.x = 0; //ändra till att man dör vid nud istället för att åka på objekt
+      gamePlay = false;
+      return gamePlay;
     }
   });
 }
@@ -118,7 +124,7 @@ function render() {
 render();
 
 window.addEventListener("keydown", function (event) {
-  if (event.key === " ") {
+  if (event.key === " " || event.key === "w" || event.key === "ArrowUp") {
     if (cube.velocity.y == 0) {
       cube.velocity.y -= 8;
     }
