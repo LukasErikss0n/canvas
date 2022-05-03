@@ -58,7 +58,7 @@ class Obstacle {
     context.fillStyle = "darkblue";
     context.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
-  moveObstical() {
+  moveObstacle() {
     this.obstaclesDraw();
 
     this.acceleration.x += this.speed.x;
@@ -67,17 +67,17 @@ class Obstacle {
 }
 
 const cube = new Cube();
-const obsticals = [];
+const obstacles = [];
 
 function spawnObstacle() {
-  let randomHeight = Math.random() * (150 - cube.height) + cube.height;
+  let randomHeight = Math.random() * (130 - cube.height) + cube.height;
   let randomWidth = Math.random() * (200 - cube.width) + cube.width;
   let obstacle = new Obstacle({
     x: canvas.width,
     height: randomHeight,
     width: randomWidth,
   });
-  obsticals.push(obstacle);
+  obstacles.push(obstacle);
   let randomMillisecondTime = Math.random() * (2500 - 1500) + 1500;
   setTimeout(spawnObstacle, randomMillisecondTime);
 }
@@ -85,36 +85,47 @@ function spawnObstacle() {
 spawnObstacle();
 
 let gamePlay = true;
+let score = 0;
+
+setInterval(() => {
+  score += 1;
+}, 500);
 
 function render() {
   if (!gamePlay) {
-    return gamePlay;
+    context.fillText("You died", 440, 220)
+    return gamePlay
   }
+// Restart game (Skapa en funktion som clearar array of obstacles)
+
   requestAnimationFrame(render);
   context.fillStyle = "rgb(206, 206, 206)";
   context.fillRect(0, 0, canvas.width, canvas.height);
   cube.cubeJump();
-  obsticals.forEach(function (obstical) {
-    obstical.moveObstical();
+  console.log(score);
+  context.font = "30px Arial";
+  context.fillText(`SCORE: ${score}`, 10, 50)
+  obstacles.forEach(function (obstacle) {
+    obstacle.moveObstacle();
   });
 
   //crash detection
-  obsticals.forEach(function (obstical) {
+  obstacles.forEach(function (obstacle) {
     if (
-      cube.position.y + cube.height == obstical.position.y &&
-      cube.position.y + cube.height + cube.velocity.y == obstical.position.y &&
-      cube.position.x + cube.width == obstical.position.x &&
-      cube.position.x == obstical.position.x + obstical.width
+      cube.position.y + cube.height <= obstacle.position.y &&
+      cube.position.y + cube.height + cube.velocity.y >= obstacle.position.y &&
+      cube.position.x + cube.width >= obstacle.position.x &&
+      cube.position.x <= obstacle.position.x + obstacle.width
     ) {
       cube.velocity.y = 0; // ändra till att man dör vid nud istället för att åka på objekt
       console.log("Nuddar toppen");
     } else if (
-      cube.position.x + cube.width - 10 >= obstical.position.x &&
-      obstical.width + obstical.position.x > cube.position.x &&
-      cube.position.y + cube.velocity.y >= obstical.position.y
+      cube.position.x + cube.width - 10 >= obstacle.position.x &&
+      obstacle.width + obstacle.position.x > cube.position.x &&
+      cube.position.y + cube.height >= obstacle.position.y
     ) {
       console.log("nuddar front");
-      obstical.acceleration.x = 0; //ändra till att man dör vid nud istället för att åka på objekt
+      obstacle.acceleration.x = 0; //ändra till att man dör vid nud istället för att åka på objekt
       gamePlay = false;
       return gamePlay;
     }
