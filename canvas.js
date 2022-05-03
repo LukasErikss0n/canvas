@@ -101,15 +101,15 @@ function render() {
   //crash detection
   obsticals.forEach(function (obstical) {
     if (
-      cube.position.y + cube.height <= obstical.position.y &&
-      cube.position.y + cube.height + cube.velocity.y >= obstical.position.y &&
-      cube.position.x + cube.width >= obstical.position.x &&
-      cube.position.x <= obstical.position.x + obstical.width
+      cube.position.y + cube.height == obstical.position.y &&
+      cube.position.y + cube.height + cube.velocity.y == obstical.position.y &&
+      cube.position.x + cube.width == obstical.position.x &&
+      cube.position.x == obstical.position.x + obstical.width
     ) {
       cube.velocity.y = 0; // ändra till att man dör vid nud istället för att åka på objekt
       console.log("Nuddar toppen");
     } else if (
-      cube.position.x + cube.width >= obstical.position.x &&
+      cube.position.x + cube.width - 10 >= obstical.position.x &&
       obstical.width + obstical.position.x > cube.position.x &&
       cube.position.y + cube.velocity.y >= obstical.position.y
     ) {
