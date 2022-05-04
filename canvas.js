@@ -93,10 +93,11 @@ setInterval(() => {
 
 function render() {
   if (!gamePlay) {
-    context.fillText("You died", 440, 220)
-    return gamePlay
+    context.fillText("You died", 440, 220);
+    location.reload();
+    return gamePlay;
   }
-// Restart game (Skapa en funktion som clearar array of obstacles)
+  // Restart game (Skapa en funktion som clearar array of obstacles)
 
   requestAnimationFrame(render);
   context.fillStyle = "rgb(206, 206, 206)";
@@ -104,7 +105,7 @@ function render() {
   cube.cubeJump();
   console.log(score);
   context.font = "30px Arial";
-  context.fillText(`SCORE: ${score}`, 10, 50)
+  context.fillText(`SCORE: ${score}`, 10, 50);
   obstacles.forEach(function (obstacle) {
     obstacle.moveObstacle();
   });
