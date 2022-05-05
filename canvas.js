@@ -1,5 +1,6 @@
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
+const restart = document.getElementById("restart");
 
 canvas.width = 1000;
 canvas.height = 400;
@@ -67,9 +68,11 @@ class Obstacle {
 }
 
 const cube = new Cube();
-const obstacles = [];
+let obstacles = [];
+let obstacleTime 
 
 function spawnObstacle() {
+  console.log("Spawninfg");
   let randomHeight = Math.random() * (130 - cube.height) + cube.height;
   let randomWidth = Math.random() * (200 - cube.width) + cube.width;
   let obstacle = new Obstacle({
@@ -79,10 +82,10 @@ function spawnObstacle() {
   });
   obstacles.push(obstacle);
   let randomMillisecondTime = Math.random() * (2500 - 1500) + 1500;
-  setTimeout(spawnObstacle, randomMillisecondTime);
+  obstacleTime = setTimeout(spawnObstacle, randomMillisecondTime);
 }
 
-spawnObstacle();
+//spawnObstacle()
 
 let gamePlay = true;
 let score = 0;
@@ -91,19 +94,22 @@ setInterval(() => {
   score += 1;
 }, 500);
 
+let currentAnimationRequest;
+
 function render() {
+  console.log("rendering", currentAnimationRequest, gamePlay);
   if (!gamePlay) {
     context.fillText("You died", 440, 220);
-    location.reload();
+    window.cancelAnimationFrame(currentAnimationRequest);
+    //location.reload();
     return gamePlay;
   }
   // Restart game (Skapa en funktion som clearar array of obstacles)
 
-  requestAnimationFrame(render);
+  currentAnimationRequest = requestAnimationFrame(render);
   context.fillStyle = "rgb(206, 206, 206)";
   context.fillRect(0, 0, canvas.width, canvas.height);
   cube.cubeJump();
-  console.log(score);
   context.font = "30px Arial";
   context.fillText(`SCORE: ${score}`, 10, 50);
   obstacles.forEach(function (obstacle) {
@@ -133,12 +139,30 @@ function render() {
   });
 }
 
-render();
+//render()
 
 window.addEventListener("keydown", function (event) {
-  if (event.key === " " || event.key === "w" || event.key === "ArrowUp") {
+  if (event.key === "w" || event.key === "ArrowUp") {
     if (cube.velocity.y == 0) {
       cube.velocity.y -= 8;
     }
   }
 });
+
+function startGame() {
+  context.fillStyle = "rgb(206, 206, 206)";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  clearTimeout(obstacleTime)
+  gamePlay = true;
+  obstacles = [];
+  currentAnimationRequest = requestAnimationFrame(render);
+  spawnObstacle();
+}
+
+restart.addEventListener("click", function () {
+  console.log("restart");
+  obstacles = [];
+  startGame();
+});
+
+startGame();
