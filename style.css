@@ -4,7 +4,7 @@
 }
 
 .canvas{
-    background-color: rgba(161, 144, 144, 0.722);
+    background-color: rgb(17 17 49);
     display: flex;
     justify-content: center;
     align-items: center;

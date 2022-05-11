@@ -3,11 +3,20 @@ const context = canvas.getContext("2d");
 const restart = document.getElementById("restart");
 const start = document.getElementById("start");
 
-// function getImg(url) {
-//   let img = new Image();
-//   img.url = `./textures/${url}`;
-//   return img;
-// }
+function getImg(src) {
+  let img = new Image();
+  img.src = src;
+  return img;
+}
+
+let cubeTexture = getImg("img/cube.png");
+let backgroundImg = getImg("img/background-img.png");
+let obstacleTexture = [
+  getImg("img/bush-appel.png"),
+  getImg("img/fens.png"),
+  getImg("img/rock-flowers.png"),
+  getImg("img/rock-mark.png"),
+];
 
 canvas.width = 1000;
 canvas.height = 400;
@@ -15,6 +24,7 @@ canvas.height = 400;
 const gravity = 0.2;
 class Cube {
   constructor() {
+    this.texture = cubeTexture;
     this.height = 50;
     this.width = 50;
 
@@ -28,8 +38,15 @@ class Cube {
     };
   }
   cubeDraw() {
-    context.fillStyle = "orange";
-    context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    context.drawImage(
+      this.texture,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+    //context.fillStyle = "orange";
+    //context.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
   cubeJump() {
@@ -59,8 +76,15 @@ class Obstacle {
   }
 
   obstaclesDraw() {
-    context.fillStyle = "darkblue";
-    context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    //context.fillStyle = "darkblue";
+    //context.fillRect(this.position.x, this.position.y, this.width, this.height);
+    context.drawImage(
+      obstacleTexture[resultObjekt],
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
   }
   moveObstacle() {
     this.obstaclesDraw();
@@ -74,16 +98,20 @@ let obstacles = [];
 let obstacleTime;
 
 function spawnObstacle() {
-  let randomHeight = Math.random() * (130 - cube.height) + cube.height;
-  let randomWidth = Math.random() * (200 - cube.width) + cube.width;
+  // let randomHeight = Math.random() * (130 - cube.height) + cube.height;
+  // let randomWidth = Math.random() * (200 - cube.width) + cube.width;
+  let randomObject = Math.random() * (3 - 1) + 1;
+  resultObjekt = Math.round(randomObject);
+
   let obstacle = new Obstacle({
     x: canvas.width,
-    height: randomHeight,
-    width: randomWidth,
+    height: obstacleTexture[resultObjekt].height, //randomHeigth', problem att bilden är störe en stenen är 200 * 200 även om stenen är 100*30
+    width: obstacleTexture[resultObjekt].width, //randomWidth
   });
   obstacles.push(obstacle);
-  let randomMillisecondTime = Math.random() * (2500 - 1500) + 1500;
+  let randomMillisecondTime = Math.random() * (2000 - 1500) + 1500;
   obstacleTime = setTimeout(spawnObstacle, randomMillisecondTime);
+  return;
 }
 
 let gamePlay = true;
@@ -106,11 +134,12 @@ function render() {
 
   currentAnimationRequest = requestAnimationFrame(render);
   context.fillStyle = "rgb(206, 206, 206)";
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  //context.drawImage(image, x, y, width, height)
+  context.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height); //context.drawImage(image, x, y, width, height)
   cube.cubeJump();
   context.font = "30px Arial";
+  context.fillStyle = "orange";
   context.fillText(`SCORE: ${score}`, 10, 50);
+
   obstacles.forEach(function (obstacle) {
     obstacle.moveObstacle();
   });
@@ -123,15 +152,14 @@ function render() {
       cube.position.x + cube.width >= obstacle.position.x &&
       cube.position.x <= obstacle.position.x + obstacle.width
     ) {
-      cube.velocity.y = 0; // ändra till att man dör vid nud istället för att åka på objekt
-      console.log("Nuddar toppen");
+      console.log("top");
+      cube.velocity.y = 0;
     } else if (
-      cube.position.x + cube.width - 10 >= obstacle.position.x &&
+      cube.position.x + cube.width - 20 >= obstacle.position.x &&
       obstacle.width + obstacle.position.x > cube.position.x &&
       cube.position.y + cube.height >= obstacle.position.y
     ) {
-      console.log("nuddar front");
-      obstacle.acceleration.x = 0; //ändra till att man dör vid nud istället för att åka på objekt
+      console.log("front");
       gamePlay = false;
       return gamePlay;
     }
@@ -155,6 +183,9 @@ function startGame() {
   score = 0;
   restart.style.display = "none";
   start.style.display = "none";
+  cube.position.y = canvas.height - cube.height;
+  cube.velocity.y = 0;
+
   currentAnimationRequest = requestAnimationFrame(render);
   spawnObstacle();
 }
