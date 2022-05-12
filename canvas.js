@@ -9,13 +9,13 @@ function getImg(src) {
   return img;
 }
 
-let cubeTexture = getImg("img/cube.png");
-let backgroundImg = getImg("img/background-img.png");
+let cubeTexture = getImg("img/cube.png"); // 50x50
+let backgroundImg = getImg("img/sahara.png");
 let obstacleTexture = [
-  getImg("img/rock-mark.png"),
-  getImg("img/fens.png"),
-  getImg("img/rock-flowers.png"),
-  getImg("img/bush-appel.png"),
+  getImg("img/rock-mark.png"), //används ej
+  getImg("img/fens.png"), //80x50
+  getImg("img/rock-flowers.png"), // 200x100
+  getImg("img/bush-appel.png"), //80x100
 ];
 
 canvas.width = 1000;
@@ -75,8 +75,6 @@ class Obstacle {
   }
 
   obstaclesDraw() {
-    //context.fillStyle = "darkblue";
-    //context.fillRect(this.position.x, this.position.y, this.width, this.height);
     context.drawImage(
       obstacleTexture[resultObjekt],
       this.position.x,
@@ -97,15 +95,13 @@ let obstacles = [];
 let obstacleTime;
 
 function spawnObstacle() {
-  // let randomHeight = Math.random() * (130 - cube.height) + cube.height;
-  // let randomWidth = Math.random() * (200 - cube.width) + cube.width;
   let randomObject = Math.random() * (3 - 1) + 1;
   resultObjekt = Math.round(randomObject);
 
   let obstacle = new Obstacle({
     x: canvas.width,
-    height: obstacleTexture[resultObjekt].height, //randomHeigth', problem att bilden är störe en stenen är 200 * 200 även om stenen är 100*30
-    width: obstacleTexture[resultObjekt].width, //randomWidth
+    height: obstacleTexture[resultObjekt].height,
+    width: obstacleTexture[resultObjekt].width,
   });
   obstacles.push(obstacle);
   let randomMillisecondTime = Math.random() * (1800 - 900) + 900;
@@ -123,7 +119,6 @@ setInterval(() => {
 let currentAnimationRequest;
 
 function render() {
- // console.log("rendering", currentAnimationRequest, gamePlay);
   if (!gamePlay) {
     context.fillText("You died", 440, 150);
     window.cancelAnimationFrame(currentAnimationRequest);
@@ -133,10 +128,10 @@ function render() {
 
   currentAnimationRequest = requestAnimationFrame(render);
   context.fillStyle = "rgb(206, 206, 206)";
-  context.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height); //context.drawImage(image, x, y, width, height)
+  context.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
   cube.cubeJump();
   context.font = "30px Arial";
-  context.fillStyle = "orange";
+  context.fillStyle = "red";
   context.fillText(`SCORE: ${score}`, 10, 50);
 
   obstacles.forEach(function (obstacle) {
@@ -151,14 +146,12 @@ function render() {
       cube.position.x + cube.width >= obstacle.position.x &&
       cube.position.x <= obstacle.position.x + obstacle.width
     ) {
-      console.log("top");
       cube.velocity.y = 0;
     } else if (
       cube.position.x + cube.width - 20 >= obstacle.position.x &&
       obstacle.width + obstacle.position.x > cube.position.x &&
       cube.position.y + cube.height >= obstacle.position.y
     ) {
-      console.log("front");
       gamePlay = false;
       return gamePlay;
     }
@@ -167,12 +160,12 @@ function render() {
 let doublejump = 0;
 window.addEventListener("keydown", function (event) {
   if (event.key === " " || event.key === "w" || event.key === "ArrowUp") {
-    if (cube.velocity.y == 0 ) {
+    if (cube.velocity.y == 0) {
       cube.velocity.y -= 8;
-      doublejump = 1
-    } else if (doublejump == 1){
-       cube.velocity.y -= cube.velocity.y + 6
-      doublejump = 0
+      doublejump = 1;
+    } else if (doublejump == 1) {
+      cube.velocity.y -= cube.velocity.y + 6;
+      doublejump = 0;
     }
   }
 });
