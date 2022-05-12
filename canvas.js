@@ -108,7 +108,7 @@ function spawnObstacle() {
     width: obstacleTexture[resultObjekt].width, //randomWidth
   });
   obstacles.push(obstacle);
-  let randomMillisecondTime = Math.random() * (2000 - 1500) + 1500;
+  let randomMillisecondTime = Math.random() * (1800 - 900) + 900;
   obstacleTime = setTimeout(spawnObstacle, randomMillisecondTime);
   return;
 }
@@ -123,7 +123,7 @@ setInterval(() => {
 let currentAnimationRequest;
 
 function render() {
-  console.log("rendering", currentAnimationRequest, gamePlay);
+ // console.log("rendering", currentAnimationRequest, gamePlay);
   if (!gamePlay) {
     context.fillText("You died", 440, 150);
     window.cancelAnimationFrame(currentAnimationRequest);
@@ -164,15 +164,18 @@ function render() {
     }
   });
 }
-
+let doublejump = 0;
 window.addEventListener("keydown", function (event) {
   if (event.key === " " || event.key === "w" || event.key === "ArrowUp") {
-    if (cube.velocity.y == 0) {
+    if (cube.velocity.y == 0 ) {
       cube.velocity.y -= 8;
+      doublejump = 1
+    } else if (doublejump == 1){
+       cube.velocity.y -= cube.velocity.y + 6
+      doublejump = 0
     }
   }
 });
-
 function startGame() {
   context.fillStyle = "rgb(206, 206, 206)";
   context.fillRect(0, 0, canvas.width, canvas.height);
