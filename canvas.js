@@ -12,16 +12,17 @@ function getImg(src) {
 let cubeTexture = getImg("img/cube.png");
 let backgroundImg = getImg("img/background-img.png");
 let obstacleTexture = [
-  getImg("img/bush-appel.png"),
+  getImg("img/rock-mark.png"),
   getImg("img/fens.png"),
   getImg("img/rock-flowers.png"),
-  getImg("img/rock-mark.png"),
+  getImg("img/bush-appel.png"),
 ];
 
 canvas.width = 1000;
 canvas.height = 400;
 
 const gravity = 0.2;
+
 class Cube {
   constructor() {
     this.texture = cubeTexture;
@@ -45,8 +46,6 @@ class Cube {
       this.width,
       this.height
     );
-    //context.fillStyle = "orange";
-    //context.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
   cubeJump() {
