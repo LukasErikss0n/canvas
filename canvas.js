@@ -28,30 +28,46 @@ class Cube {
     this.texture = cubeTexture;
     this.height = 50;
     this.width = 50;
+    this.rotation = 0;
+    this.jumpRotation = 0;
 
     this.position = {
-      x: 30,
+      x: 60,
       y: canvas.height - this.height,
     };
     this.velocity = {
       x: 0,
-      y: 1,
+      y: 0,
     };
   }
   cubeDraw() {
+    if (this.velocity.y !== 0) {
+      if (this.jumpRotation < Math.PI / 2) {
+        this.rotation += Math.PI / 32;
+      } else {
+        this.jumpRotation = 0;
+      }
+    } else {
+      this.rotation = 0;
+    }
+    context.save();
+    context.translate(this.position.x, this.position.y);
+    context.rotate(this.rotation);
     context.drawImage(
       this.texture,
-      this.position.x,
-      this.position.y,
+      -this.width / 2,
+      -this.height / 2,
       this.width,
       this.height
     );
+    context.translate(-this.position.x, -this.position.y);
+    context.restore();
   }
 
   cubeJump() {
     this.cubeDraw();
     this.position.y += this.velocity.y;
-    if (this.position.y + this.height + this.velocity.y <= canvas.height) {
+    if (this.position.y + this.height / 2 + this.velocity.y <= canvas.height) {
       this.velocity.y += gravity;
     } else {
       this.velocity.y = 0;
@@ -104,7 +120,7 @@ function spawnObstacle() {
     width: obstacleTexture[resultObjekt].width,
   });
   obstacles.push(obstacle);
-  let randomMillisecondTime = Math.random() * (1800 - 900) + 900;
+  let randomMillisecondTime = Math.random() * (1800 - 1000) + 1000;
   obstacleTime = setTimeout(spawnObstacle, randomMillisecondTime);
   return;
 }
@@ -141,16 +157,17 @@ function render() {
   //crash detection
   obstacles.forEach(function (obstacle) {
     if (
-      cube.position.y + cube.height <= obstacle.position.y &&
-      cube.position.y + cube.height + cube.velocity.y >= obstacle.position.y &&
-      cube.position.x + cube.width >= obstacle.position.x &&
-      cube.position.x <= obstacle.position.x + obstacle.width
+      cube.position.y + cube.height / 2 <= obstacle.position.y &&
+      cube.position.y + cube.height / 2 + cube.velocity.y >=
+        obstacle.position.y &&
+      cube.position.x + cube.width / 2 >= obstacle.position.x &&
+      cube.position.x <= obstacle.position.x + obstacle.width / 2
     ) {
       cube.velocity.y = 0;
     } else if (
-      cube.position.x + cube.width - 20 >= obstacle.position.x &&
-      obstacle.width + obstacle.position.x > cube.position.x &&
-      cube.position.y + cube.height >= obstacle.position.y
+      cube.position.x + cube.width / 2 >= obstacle.position.x &&
+      obstacle.width / 2 + obstacle.position.x > cube.position.x &&
+      cube.position.y + cube.height / 2 >= obstacle.position.y
     ) {
       gamePlay = false;
       return gamePlay;
@@ -178,7 +195,7 @@ function startGame() {
   score = 0;
   restart.style.display = "none";
   start.style.display = "none";
-  cube.position.y = canvas.height - cube.height;
+  cube.position.y = canvas.height - cube.height / 2;
   cube.velocity.y = 0;
 
   currentAnimationRequest = requestAnimationFrame(render);
