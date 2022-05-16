@@ -113,6 +113,7 @@ let obstacleTime;
 function spawnObstacle() {
   let randomObject = Math.random() * (3 - 1) + 1;
   resultObjekt = Math.round(randomObject);
+  console.log(resultObjekt);
 
   let obstacle = new Obstacle({
     x: canvas.width,
@@ -165,7 +166,7 @@ function render() {
     ) {
       cube.velocity.y = 0;
     } else if (
-      cube.position.x + cube.width / 2 >= obstacle.position.x &&
+      cube.position.x + cube.width / 2 - 10 >= obstacle.position.x &&
       obstacle.width / 2 + obstacle.position.x > cube.position.x &&
       cube.position.y + cube.height / 2 >= obstacle.position.y
     ) {
