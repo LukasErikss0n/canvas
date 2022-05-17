@@ -158,7 +158,7 @@ function render() {
   //crash detection
   obstacles.forEach(function (obstacle) {
     if (
-      cube.position.y + cube.height / 2 <= obstacle.position.y &&
+      cube.position.y + cube.height / 2 - 10 <= obstacle.position.y &&
       cube.position.y + cube.height / 2 + cube.velocity.y >=
         obstacle.position.y &&
       cube.position.x + cube.width / 2 >= obstacle.position.x &&
