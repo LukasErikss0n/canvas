@@ -9,7 +9,8 @@ function getImg(src) {
   return img;
 }
 
-const music = new Audio("./music.m4a");
+const music = new Audio("sfx/music.m4a");
+const wind = new Audio("sfx/windslow.m4a");
 
 let cubeTexture = getImg("img/cube.png"); // 50x50
 let backgroundImg = getImg("img/sahara.png");
@@ -140,6 +141,7 @@ let currentAnimationRequest;
 function render() {
   if (!gamePlay) {
     music.pause();
+    wind.pause();
     context.fillText("You died", 440, 150);
     window.cancelAnimationFrame(currentAnimationRequest);
     restart.style.display = "inline";
@@ -184,6 +186,9 @@ window.addEventListener("keydown", function (event) {
     if (cube.velocity.y == 0) {
       cube.velocity.y -= 8;
       doublejump = 1;
+      wind.play();
+      wind.loop = true;
+      wind.volume = 0.3;
     } else if (doublejump == 1) {
       cube.velocity.y -= cube.velocity.y + 6;
       doublejump = 0;
