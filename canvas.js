@@ -9,6 +9,8 @@ function getImg(src) {
   return img;
 }
 
+const music = new Audio("./music.m4a");
+
 let cubeTexture = getImg("img/cube.png"); // 50x50
 let backgroundImg = getImg("img/sahara.png");
 let obstacleTexture = [
@@ -137,6 +139,7 @@ let currentAnimationRequest;
 
 function render() {
   if (!gamePlay) {
+    music.pause();
     context.fillText("You died", 440, 150);
     window.cancelAnimationFrame(currentAnimationRequest);
     restart.style.display = "inline";
@@ -201,6 +204,9 @@ function startGame() {
 
   currentAnimationRequest = requestAnimationFrame(render);
   spawnObstacle();
+  music.play();
+  music.loop = true;
+  music.volume = 1;
 }
 
 restart.addEventListener("click", function () {
