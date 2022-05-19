@@ -2,6 +2,7 @@ const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 const restart = document.getElementById("restart");
 const start = document.getElementById("start");
+const canvasImg = document.getElementById("canvas-img");
 
 function getImg(src) {
   let img = new Image();
@@ -206,6 +207,8 @@ function startGame() {
   start.style.display = "none";
   cube.position.y = canvas.height - cube.height / 2;
   cube.velocity.y = 0;
+  canvas.style.display = "block";
+  canvasImg.style.display = "none";
 
   currentAnimationRequest = requestAnimationFrame(render);
   spawnObstacle();

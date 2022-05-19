@@ -3,7 +3,11 @@
     padding: 0;
 }
 
-.canvas{
+
+canvas{
+    display: none;
+}
+.canvas-wrapper{
     background-color: rgb(244 179 113);
     display: flex;
     justify-content: center;
@@ -36,5 +40,13 @@
     background-color: rgb(255, 0, 0);
     border-radius: 10px;
 
+
+}
+
+#canvas-img{
+    z-index: 100;
+    width: 70vw;
+    height: 50vh;
+    display: block;
 
 }
