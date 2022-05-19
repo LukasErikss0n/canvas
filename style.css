@@ -45,8 +45,13 @@ canvas{
 
 #canvas-img{
     z-index: 100;
-    width: 70vw;
-    height: 50vh;
+    width: 90vw;
+    height: 66vh;
     display: block;
 
 }
+
+@font-face {
+    font-family: "alkhemikal";
+    src: url("fonts/Alkhemikal.ttf")
+  }

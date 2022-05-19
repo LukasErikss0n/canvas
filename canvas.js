@@ -14,7 +14,7 @@ const music = new Audio("sfx/music.m4a");
 const wind = new Audio("sfx/windslow.m4a");
 
 let cubeTexture = getImg("img/cube.png"); // 50x50
-let backgroundImg = getImg("img/sahara.png");
+let backgroundImg = getImg("img/newbackground.jpg");
 let obstacleTexture = [
   getImg("img/rock-mark.png"), //används ej
   getImg("img/fens.png"), //80x50
@@ -153,9 +153,10 @@ function render() {
   context.fillStyle = "rgb(206, 206, 206)";
   context.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
   cube.cubeJump();
-  context.font = "30px Arial";
+  context.font = "35px alkhemikal";
   context.fillStyle = "red";
   context.fillText(`SCORE: ${score}`, 10, 50);
+
 
   obstacles.forEach(function (obstacle) {
     obstacle.moveObstacle();
