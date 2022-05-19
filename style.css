@@ -8,7 +8,7 @@ canvas{
     display: none;
 }
 .canvas-wrapper{
-    background-color: rgb(244 179 113);
+    background-color: rgb(237 165 63);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,8 +35,9 @@ canvas{
 .button{
     color: rgb(251, 251, 251);
     border: none;
-    font-size: 20px;
+    font-size: 30px;
     padding: 1rem 2rem;
+    font-family: "alkhemikal";
     background-color: rgb(255, 0, 0);
     border-radius: 10px;
 
