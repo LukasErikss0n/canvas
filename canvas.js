@@ -13,13 +13,13 @@ function getImg(src) {
 const music = new Audio("sfx/music.m4a");
 const wind = new Audio("sfx/windslow.m4a");
 
-let cubeTexture = getImg("img/tumbleweed2.png"); // 50x50
-let backgroundImg = getImg("img/newbackground.jpg");
+let cubeTexture = getImg("img/tumbleweed.png"); // 50x50
+let backgroundImg = getImg("img/background.jpg");
 let obstacleTexture = [
   getImg("img/rock-mark.png"), //används ej
-  getImg("img/fens.png"), //80x50
-  getImg("img/rock-flowers.png"), // 200x100
-  getImg("img/bush-appel.png"), //80x100
+  getImg("img/fence.png"), //80x50
+  getImg("img/barrels.png"), // 200x100
+  getImg("img/cactus.png"), //80x100
 ];
 
 canvas.width = 1000;
